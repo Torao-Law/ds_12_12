@@ -32,9 +32,9 @@ export default function HomeAdmin() {
     async function fetchData() {
       try {
         const response = await getUserUrl()
-        const findUserLink = response.documents.find(data => data.$id == user.$id)
+        const findUserLink = response?.documents?.find(data => data.$id == user.$id)
         setCekUser(findUserLink)
-        setData(findUserLink.links)
+        setData(findUserLink?.links)
       } catch (error) {
         throw error
       }

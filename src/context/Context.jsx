@@ -42,17 +42,18 @@ export const ContextProvider = ({children}) => {
       await account.createEmailSession(userInfo.email, userInfo.password)
       
       let accountDetails = await account.get();
+      console.log(accountDetails)
       setUser(accountDetails)
       
       setLoading(true)
       await database.createDocument(
         import.meta.env.VITE_DATABASE, 
         import.meta.env.VITE_TABLE_USER, 
-        accountDetails.$id, 
+        accountDetails?.$id, 
         { 
-          username: userInfo.username,
-          name: userInfo.name,
-          idSessionLogin: accountDetails.$id
+          username: userInfo?.username,
+          name: userInfo?.name,
+          idSessionLogin: accountDetails?.$id
         }
       )
 
@@ -76,7 +77,7 @@ export const ContextProvider = ({children}) => {
   async function getLink() {
     setLoading(true)
     try {
-      const response = await database.listDocuments(import.meta.env.VITE_DATABASE, import.meta.env.VITE_TABLE_URL)
+      const response = await database.listDocuments(import.meta.env.VITE_DATABASE, import.meta.env.VITE_TABLE_LINK)
       setLink(response)
     } catch (error) {
       console.error(error)
@@ -84,12 +85,12 @@ export const ContextProvider = ({children}) => {
   }
 
   async function postLink({name, url, users}) {
-    console.log(users);
     setLoading(true)
     try{
-      await database.createDocument(
+
+      const datas = await database.createDocument(
         import.meta.env.VITE_DATABASE, 
-        import.meta.env.VITE_TABLE_URL, 
+        import.meta.env.VITE_TABLE_LINK, 
         ID.unique(), 
         { 
           name, 
@@ -97,9 +98,10 @@ export const ContextProvider = ({children}) => {
           isShow: true,
           users: users
         }
-      )
+        )
+        console.log(datas)
 
-      let data = await database.listDocuments(import.meta.env.VITE_DATABASE, import.meta.env.VITE_TABLE_URL)
+      let data = await database.listDocuments(import.meta.env.VITE_DATABASE, import.meta.env.VITE_TABLE_LINK)
       setLink(data)
     }catch(error){
       console.error(error)
@@ -112,11 +114,11 @@ export const ContextProvider = ({children}) => {
     try{
       await database.deleteDocument(
         import.meta.env.VITE_DATABASE, 
-        import.meta.env.VITE_TABLE_URL, 
+        import.meta.env.VITE_TABLE_LINK, 
         id
       )
 
-      let data = await database.listDocuments(import.meta.env.VITE_DATABASE, import.meta.env.VITE_TABLE_URL)
+      let data = await database.listDocuments(import.meta.env.VITE_DATABASE, import.meta.env.VITE_TABLE_LINK)
       setLink(data)
     }catch(error){
       console.error(error)
